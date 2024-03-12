@@ -1,26 +1,19 @@
 package com.potato.ucenter;
 
-import com.baomidou.mybatisplus.core.toolkit.Assert;
-import com.potato.ucenter.mapper.UserMapper;
-import com.potato.ucenter.model.User;
-import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
+import org.springframework.util.DigestUtils;
 
 @SpringBootTest
 class UCenterApplicationTests {
 
-    @Resource
-    private UserMapper userMapper;
-
+    @Test
+    void testDigest() throws NoSuchFieldException {
+        String newPassword= DigestUtils.md5DigestAsHex(("potato" + "myPassword").getBytes());
+        System.out.println(newPassword);
+    }
     @Test
     void contextLoads() {
-        System.out.println(("----- selectAll method test ------"));
-        List<User> userList = userMapper.selectList(null);
-        Assert.isTrue(5 == userList.size(), "");
-        userList.forEach(System.out::println);
     }
 
 }
