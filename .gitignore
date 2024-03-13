@@ -32,5 +32,5 @@ build/
 ### VS Code ###
 .vscode/
 
-# 忽略应用配置文件application.yml，防止上传到GitHub
+# disregard the configuration file: application.yml
 application.yml
