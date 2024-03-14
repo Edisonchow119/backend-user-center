@@ -16,6 +16,8 @@ import org.springframework.util.DigestUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.potato.ucenter.constant.UserConstant.USER_LOGIN_STATE;
+
 /**
  * 用户服务实现类
  *
@@ -34,10 +36,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      */
     private static final String SALT = "potato";
 
-    /**
-     * 用户登录态键
-     */
-    private static final String USER_LOGIN_STATE = "userloginState";
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -112,19 +110,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             return null;
         }
         // 3. 用户脱敏
-        User safetyUser = new User();
-        safetyUser.setId(user.getId());
-        safetyUser.setUsername(user.getUsername());
-        safetyUser.setUserAccount(user.getUserAccount());
-        safetyUser.setAvatarUrl(user.getAvatarUrl());
-        safetyUser.setGender(0);
-        safetyUser.setPhone(user.getPhone());
-        safetyUser.setEmail(user.getEmail());
-        safetyUser.setUserStatus(user.getUserStatus());
-        safetyUser.setCreateTime(new Date());
+        User safetyUser = getSafefyUser(user);
         // 4. 记录用户登录态
         request.getSession().setAttribute(USER_LOGIN_STATE, safetyUser);
         log.info(String.valueOf(safetyUser));
+        return safetyUser;
+    }
+
+    /**
+     * 用户脱敏
+     * @param originUser
+     * @return
+     */
+    @Override
+    public User getSafefyUser(User originUser){
+        User safetyUser = new User();
+        safetyUser.setId(originUser.getId());
+        safetyUser.setUsername(originUser.getUsername());
+        safetyUser.setUserAccount(originUser.getUserAccount());
+        safetyUser.setAvatarUrl(originUser.getAvatarUrl());
+        safetyUser.setGender(0);
+        safetyUser.setPhone(originUser.getPhone());
+        safetyUser.setEmail(originUser.getEmail());
+        safetyUser.setUserStatus(originUser.getUserStatus());
+        safetyUser.setCreateTime(new Date());
+        safetyUser.setUserRole(originUser.getUserRole());
         return safetyUser;
     }
 }
